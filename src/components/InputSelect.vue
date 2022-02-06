@@ -2,7 +2,6 @@
   <div
     class="flex items-center w-full border border-inp-bor bg-inp-gray py-3 px-4"
     :class="visible ? 'rounded-t-md' : 'rounded-md'"
-    @mouseout="hideVis"
   >
     <input
       ref="input"
@@ -134,10 +133,6 @@ export default {
     showCurrency() {
       this.visible = !this.visible
       this.$refs.input.focus()
-      this.hideVis()
-    },
-    hideVis(e) {
-      console.log(e.target)
     }
   }
 }
