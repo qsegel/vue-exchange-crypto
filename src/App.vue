@@ -14,12 +14,14 @@
       :to="to"
       :amount="amount"
       :estimated="estimated"
+      :error="error"
       :valid="valid"
       @change-from="changeFrom"
       @change-to="changeTo"
-      @change-amount="changeAmount"
-      @setCurrency="setCurrency"
-      @setCurrencyRight="setCurrencyRight"
+      @changeAmount="changeAmount"
+      @setCurrencyFrom="setCurrencyFrom"
+      @setCurrencyTo="setCurrencyTo"
+      @changeTicker="changeTicker"
     />
   </div>
 </template>
@@ -38,16 +40,23 @@ export default {
     to: 'eth',
     amount: 0,
     estimated: 0,
+    error: false,
     valid: false
   }),
   watch: {
     async amount() {
-      const { data } = await ExchangeService.getEstimatedExchangeAmount(
-        this.amount,
-        this.from,
-        this.to
-      )
-      this.estimated = data.estimatedAmount
+      try {
+        const { data } = await ExchangeService.getEstimatedExchangeAmount(
+          this.amount,
+          this.from,
+          this.to
+        )
+        this.estimated = data.estimatedAmount
+      } catch (error) {
+        if (error) {
+          this.valid = true
+        }
+      }
     }
   },
   async created() {
@@ -69,12 +78,17 @@ export default {
       this.to = val
       this.updateAmount()
     },
-    setCurrency(ticker) {
+    setCurrencyFrom(ticker) {
       this.from = ticker
       this.updateAmount()
     },
-    setCurrencyRight(ticker) {
+    setCurrencyTo(ticker) {
       this.to = ticker
+      this.updateAmount()
+    },
+    changeTicker(from, to) {
+      this.from = to
+      this.to = from
       this.updateAmount()
     },
 
@@ -87,7 +101,7 @@ export default {
         this.amount = data.minAmount
       } catch (error) {
         if (error) {
-          this.valid = true
+          this.error = true
         }
       }
     }
