@@ -6,10 +6,10 @@
     <input
       ref="input"
       type="text"
-      class="outline-none bg-inp-gray w-full border-inp-bor font-vollkorn text-base placeholder-list-cur"
+      class="outline-none bg-inp-gray w-full border-inp-bor text-base placeholder-list-cur"
       :class="!visible ? 'border-r' : ''"
-      :value="!visible ? inputValue : search"
-      placeholder="Search"
+      :value="!visible ? inputValue : ''"
+      :placeholder="visible ? 'Search' : ''"
       @input="changeAmount"
     />
     <svg
@@ -32,10 +32,10 @@
     <div
       v-show="!visible"
       class="bg-inp-gray w-36 px-3 outline-none flex justify-between items-center cursor-pointer"
-      @click="showCurrency"
+      @click="showCurrency()"
     >
       <img :src="imageIcon" />
-      <div class="font-vollkorn text-base text-dark">
+      <div class="text-base text-dark">
         {{ currentCoin.toUpperCase() }}
       </div>
       <svg
@@ -52,6 +52,9 @@
       </svg>
     </div>
   </div>
+  <div v-show="valid" class="absolute top-14 left-10 text-red-600">
+    слишком маленький депозит
+  </div>
   <div
     v-show="visible"
     class="bg-inp-gray absolute w-full top-12 border border-inp-bor rounded-b z-10"
@@ -63,16 +66,16 @@
       @click="setCurrency(currency.ticker, currency.image)"
     >
       <img :src="currency.image" class="ml-3" />
-      <p class="ml-4 text-dark font-vollkorn text-base">
+      <p class="ml-4 text-dark text-base">
         {{ currency.ticker.toUpperCase() }}
       </p>
-      <p class="ml-4 text-list-cur font-vollkorn text-base">
+      <p class="ml-4 text-list-cur text-base">
         {{ currency.name }}
       </p>
     </div>
     <div
       v-show="!filteredCurrencies.length"
-      class="py-2 px-1 font-vollkorn text-base text-center"
+      class="py-2 px-1 text-base text-center"
     >
       Нет совпадений
     </div>
@@ -87,7 +90,7 @@ export default {
       default: () => []
     },
     inputValue: {
-      type: Number,
+      type: [Number, String],
       default: 0
     },
     currentCoin: {
@@ -117,7 +120,6 @@ export default {
   },
   methods: {
     setCurrency(ticker, image) {
-      this.search = ''
       this.visible = !this.visible
       this.$emit('setCurrency', ticker, image)
       this.search = ''
@@ -127,10 +129,9 @@ export default {
         const val = e.target.value
         this.$emit('changeAmount', val)
       }
-      const val = e.target.value
-      this.search = val
     },
     showCurrency() {
+      this.search = ''
       this.visible = !this.visible
       this.$refs.input.focus()
     }

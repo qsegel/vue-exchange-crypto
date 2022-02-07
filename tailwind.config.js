@@ -15,10 +15,17 @@ module.exports = {
       },
       fontSize: {
         '5xl-1': '3.125rem'
+      },
+      fontFamily: {
+        serif: [
+          'Vollkorn',
+          'Georgia',
+          'Cambria',
+          'Times New Roman',
+          'Times',
+          'serif'
+        ]
       }
-    },
-    fontFamily: {
-      vollkorn: ['ui-serif', 'Vollkorn']
     }
   },
   variants: {

@@ -12,13 +12,13 @@
         />
       </div>
       <div class="cursor-pointer" @click="changeTicker">
-        <span class="hidden sm:block my-4 sm:ml-8 flex flex-col justify-center">
+        <span class="hidden my-4 sm:ml-8 sm:flex flex-col justify-center">
           <ArrowIcon />
-          <ArrowIcon class="rotate180" />
+          <ArrowIcon class="transform rotate-180" />
         </span>
         <span class="sm:hidden my-4 flex justify-end">
-          <ArrowIcon class="rotate90" />
-          <ArrowIcon class="rotate-90" />
+          <ArrowIcon class="transform -rotate-90" />
+          <ArrowIcon class="transform rotate-90" />
         </span>
       </div>
       <div class="w-full flex flex-col relative sm:ml-8">
@@ -34,16 +34,13 @@
     </div>
     <div class="mt-8 sm:flex justify-between">
       <div class="w-full flex flex-col">
-        <label
-          for="address"
-          class="text-dark font-vollkorn text-base font-normal"
-        >
+        <label for="address" class="text-dark text-base font-normal">
           Your Ethereum address
         </label>
         <input
           id="address"
           type="text"
-          class="mt-1 w-full outline-none bg-gray-100 rounded-md py-3 px-4 mr-10 border border-inp-bor font-vollkorn text-base"
+          class="mt-1 w-full outline-none bg-gray-100 rounded-md py-3 px-4 mr-10 border border-inp-bor text-base"
         />
       </div>
       <div class="self-end">
@@ -51,13 +48,13 @@
           :disabled="error"
           :error="error"
           class="mt-4 sm:ml-8"
-          :class="!error ? 'hover:bg-btn-hov' : 'cursor-not-allowed'"
+          :class="classes"
           >Exchange</AppButton
         >
       </div>
     </div>
     <div v-show="error" class="mt-1 flex justify-center sm:justify-end">
-      <span class="text-danger text-base font-normal font-vollkorn">
+      <span class="text-danger text-base font-normal">
         This pair is disabled now
       </span>
     </div>
@@ -89,11 +86,11 @@ export default {
       default: 'eth'
     },
     amount: {
-      type: Number,
+      type: [Number, String],
       default: 0
     },
     estimated: {
-      type: Number,
+      type: [Number, String],
       default: 0
     },
     error: {
@@ -129,6 +126,12 @@ export default {
           .toLowerCase()
           .includes(this.searchRight.toLowerCase())
       })
+    },
+    classes() {
+      return {
+        'hover:bg-btn-hov': !this.error && !this.valid,
+        'cursor-not-allowed': this.error || this.valid
+      }
     }
   },
   methods: {
@@ -164,15 +167,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.rotate180 {
-  rotate: 180deg;
-}
-.rotate90 {
-  rotate: 90deg;
-}
-.rotate-90 {
-  rotate: -90deg;
-}
-</style>

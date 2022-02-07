@@ -1,6 +1,6 @@
 @tailwind base;
 
-@import url('https://fonts.googleapis.com/css2?family=Vollkorn+SC&display=swap');
 @tailwind components;
+@import url('https://fonts.googleapis.com/css2?family=Vollkorn:wght@400;700&display=swap');
 
 @tailwind utilities;

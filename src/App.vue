@@ -1,12 +1,10 @@
 <template>
-  <div class="max-w-md m-56 mx-auto p-3" style="max-width: 970px">
+  <div class="max-w-md m-56 mx-auto p-3 font-serif" style="max-width: 970px">
     <div>
-      <h2 class="text-5xl-1 text-dark font-vollkorn font-light">
+      <h2 class="text-5xl-1 text-dark font-serif font-light">
         Crypto Exchange
       </h2>
-      <p class="mt-2 text-dark font-vollkorn text-xl font-normal">
-        Exchange fast and easy
-      </p>
+      <p class="mt-2 text-dark text-xl font-normal">Exchange fast and easy</p>
     </div>
     <ExchangeWidget
       :currencies="currencies"
@@ -39,22 +37,27 @@ export default {
     from: 'btc',
     to: 'eth',
     amount: 0,
+    minAmount: 0,
     estimated: 0,
     error: false,
     valid: false
   }),
   watch: {
     async amount() {
-      try {
-        const { data } = await ExchangeService.getEstimatedExchangeAmount(
-          this.amount,
-          this.from,
-          this.to
-        )
-        this.estimated = data.estimatedAmount
-      } catch (error) {
-        if (error) {
-          this.valid = true
+      this.valid = false
+      if (this.amount < this.minAmount) {
+        this.valid = true
+        this.estimated = '-'
+      } else {
+        try {
+          const { data } = await ExchangeService.getEstimatedExchangeAmount(
+            this.amount,
+            this.from,
+            this.to
+          )
+          this.estimated = data.estimatedAmount
+        } catch (err) {
+          console.log(err)
         }
       }
     }
@@ -64,7 +67,7 @@ export default {
     this.currencies = currencies.data
 
     const minExchangeAmount = await ExchangeService.getMinimalExchangeAmount()
-    this.amount = minExchangeAmount.data.minAmount
+    this.minAmount = this.amount = minExchangeAmount.data.minAmount
   },
   methods: {
     changeAmount(val) {
@@ -93,12 +96,14 @@ export default {
     },
 
     async updateAmount() {
+      this.valid = false
+      this.error = false
       try {
         const { data } = await ExchangeService.getMinimalExchangeAmount(
           this.from,
           this.to
         )
-        this.amount = data.minAmount
+        this.minAmount = this.amount = data.minAmount
       } catch (error) {
         if (error) {
           this.error = true

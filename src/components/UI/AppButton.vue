@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="w-full sm:w-auto bg-btn-blue py-3 px-11 text-white rounded-md border"
+    class="w-full sm:w-auto bg-btn-blue py-3 px-11 text-white font-bold rounded-md border"
   >
     <slot></slot>
   </button>
