@@ -8,8 +8,8 @@
       type="text"
       class="outline-none bg-inp-gray w-full border-inp-bor text-base placeholder-list-cur"
       :class="!visible ? 'border-r' : ''"
-      :value="!visible ? inputValue : ''"
-      :placeholder="visible ? 'Search' : ''"
+      :value="!visible ? inputValue : search"
+      placeholder="Search"
       @input="changeAmount"
     />
     <svg
@@ -122,13 +122,15 @@ export default {
     setCurrency(ticker, image) {
       this.visible = !this.visible
       this.$emit('setCurrency', ticker, image)
-      this.search = ''
     },
     changeAmount(e) {
       if (!this.visible) {
         const val = e.target.value
         this.$emit('changeAmount', val)
+        this.search = val
       }
+      const val = e.target.value
+      this.search = val
     },
     showCurrency() {
       this.search = ''
